@@ -372,14 +372,14 @@ const LoginPage = () => {
                     </div>
                 <div className="bg-white/10 rounded-lg p-4 sm:p-6">
                   <h3 className="text-base sm:text-lg font-medium text-white mb-3 sm:mb-4">Recent Transactions</h3>
-                  <div className="space-y-3 sm:space-y-4">
+                  <div className="space-y-2 sm:space-y-2">
                     {transactions.map((transaction) => (
                       <div className="bg-white/5 hover:bg-white/10 transition-colors">
                       <motion.div
                         key={transaction.id}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="flex justify-between items-center p-3 sm:p-4 rounded-lg "
+                        className="flex justify-between items-center p-2 sm:p-4 rounded-lg "
                       >
                         <div className="truncate pr-2">
                           <p className="text-sm sm:text-base text-white font-medium truncate">{transaction.description}</p>
