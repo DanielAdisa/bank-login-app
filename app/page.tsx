@@ -194,9 +194,9 @@ const LoginPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen gradient-background py-6 flex flex-col justify-center sm:py-12">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-fuchsia-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl opacity-75 animate-float"></div>
+    <div className="min-h-screen gradient-background rounded-xl md:py-6 flex flex-col justify-center">
+      <div className="relative p-4 rounded-xl md:max-w-xl mx-auto">
+        <div className="absolute inset-0 bg-gradient-to-r rounded-xl from-violet-500 to-fuchsia-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl opacity-75 animate-float"></div>
         <div className="relative px-4 py-10 glass-morphism shadow-xl sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <motion.div
