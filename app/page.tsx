@@ -362,6 +362,12 @@ const LoginPage = () => {
                 transition={{ duration: 0.3 }}
                 className="space-y-4 sm:space-y-6"
               >
+                <div className="flex items-center space-x-4">
+                      <CheckCircle className="h-8 w-8 text-green-400" />
+                      <h2 className="text-xl p-2 font-semibold text-white">
+                        Welcome back, {credentials.email}
+                      </h2>
+                    </div>
                 <div className="bg-white/10 rounded-lg p-4 sm:p-6">
                   <h3 className="text-base sm:text-lg font-medium text-white mb-3 sm:mb-4">Recent Transactions</h3>
                   <div className="space-y-3 sm:space-y-4">
