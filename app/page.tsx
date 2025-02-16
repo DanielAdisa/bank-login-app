@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, Eye, EyeOff, User, Building, Shield, Users, CheckCircle, AlertTriangle } from "lucide-react";
+import { Lock, Eye, EyeOff, User, Building, Shield, Users, CheckCircle, AlertTriangle, UserCircle } from "lucide-react";
 import Swal from "sweetalert2";
 import { validatePassword, calculatePasswordStrength, hashPassword, RateLimiter } from "../utils/security";
 
@@ -44,6 +44,7 @@ const LoginPage = () => {
     { id: "customer", label: "Customer", icon: Users, placeholder: "customer@example.com" },
     { id: "employee", label: "Employee", icon: Shield, placeholder: "employee@example.com" },
     { id: "admin", label: "Admin", icon: Building, placeholder: "admin@example.com" },
+    { id: "Guest", label: "Guest", icon: UserCircle, placeholder: "guest@example.com" },
   ];
 
   useEffect(() => {
@@ -51,13 +52,13 @@ const LoginPage = () => {
     setPasswordStrength(strength);
   }, [credentials.password]);
 
-  // Add a useEffect for session persistence
+
   useEffect(() => {
     const savedSession = localStorage.getItem('bankingSession');
     if (savedSession) {
       const session: SessionData = JSON.parse(savedSession);
       
-      // Check if session has expired
+
       if (Date.now() > session.expiresAt) {
         localStorage.removeItem('bankingSession');
         return;
@@ -149,7 +150,6 @@ const LoginPage = () => {
       backdrop: `rgba(0,0,123,0.4)`,
     }).then((result) => {
       if (result.isConfirmed) {
-        // Clear session data
         localStorage.removeItem('bankingSession');
         
         setIsLoggedIn(false);
@@ -168,237 +168,239 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    const checkSession = () => {
-      const savedSession = localStorage.getItem('bankingSession');
-      if (savedSession) {
-        const session: SessionData = JSON.parse(savedSession);
-        if (Date.now() > session.expiresAt) {
-          localStorage.removeItem('bankingSession');
-          setIsLoggedIn(false);
-          setCredentials({ email: "", password: "", remember: false });
-          setTransactions([]);
-          
-          Swal.fire({
-            title: "Session Expired",
-            text: "Please log in again",
-            icon: "warning",
-            background: "rgba(255, 255, 255, 0.9)",
-            backdrop: `rgba(0,0,123,0.4)`,
-          });
-        }
+  const checkSession = () => {
+    const savedSession = localStorage.getItem('bankingSession');
+    if (savedSession) {
+      const session: SessionData = JSON.parse(savedSession);
+      if (Date.now() > session.expiresAt) {
+        localStorage.removeItem('bankingSession');
+        setIsLoggedIn(false);
+        setCredentials({ email: "", password: "", remember: false });
+        setTransactions([]);
+        
+        Swal.fire({
+          title: "Session Expired",
+          text: "Please log in again",
+          icon: "warning",
+          background: "rgba(255, 255, 255, 0.9)",
+          backdrop: `rgba(0,0,123,0.4)`,
+        });
       }
-    };
-  
-    const interval = setInterval(checkSession, 60000); // Check every minute
-    return () => clearInterval(interval);
-  }, []);
+    }
+  };
+
+  const interval = setInterval(checkSession, 60000); 
+  return () => clearInterval(interval);
+}, []);
 
   return (
-    <div className="min-h-screen gradient-background rounded-xl md:py-6 flex flex-col justify-center">
-      <div className="relative p-4 rounded-xl md:max-w-xl mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r rounded-xl from-violet-500 to-fuchsia-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl opacity-75 animate-float"></div>
-        <div className="relative px-4 py-10 glass-morphism shadow-xl sm:rounded-3xl sm:p-20">
-          <div className="max-w-md mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h1 className="text-3xl font-bold text-white mb-8 text-center">Banking Portal</h1>
-            </motion.div>
+    <div className="min-h-screen gradient-background rounded-2xl px-4 py-6 flex flex-col justify-center sm:py-12">
+  <div className="relative py-3 mx-auto w-full max-w-xs sm:max-w-xl">
+    <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-fuchsia-500 shadow-lg transform -skew-y-4 sm:-skew-y-0 sm:-rotate-6 sm:rounded-3xl opacity-75 animate-float overflow-hidden"></div>
+    <div className="relative px-4 py-8 glass-morphism shadow-xl sm:rounded-3xl sm:p-10 md:p-20">
+      <div className="mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-8 text-center">Banking Portal</h1>
+        </motion.div>
 
-            <div className="space-y-8">
-              <AnimatePresence mode="wait">
-                {!isLoggedIn ? (
+        <div className="space-y-6 sm:space-y-8">
+          <AnimatePresence mode="wait">
+            {!isLoggedIn ? (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-4 sm:space-y-6"
+              >
+                {/* Error Message */}
+                {error && (
                   <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-6"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-red-500/20 border border-red-500 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-sm"
                   >
-                    {error && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-red-500/20 border border-red-500 text-white px-4 py-3 rounded-lg"
-                      >
-                        <div className="flex items-center">
-                          <AlertTriangle className="h-5 w-5 mr-2" />
-                          <span>{error}</span>
-                        </div>
-                      </motion.div>
-                    )}
-
-                    <div className="flex space-x-4 justify-center">
-                      {userTypes.map((type) => {
-                        const Icon = type.icon;
-                        return (
-                          <motion.div
-                            key={type.id}
-                            onClick={() => setActiveTab(type.id)}
-                            className={`p-4 flex flex-col items-center rounded-xl cursor-pointer ${
-                              activeTab === type.id
-                                ? "bg-white/20 border border-white/50"
-                                : "hover:bg-white/10"
-                            }`}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <Icon size={32} className="text-white" />
-                            <span className="mt-2 text-sm text-white">{type.label}</span>
-                          </motion.div>
-                        );
-                      })}
+                    <div className="flex items-center">
+                      <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                      <span>{error}</span>
                     </div>
-
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div>
-                        <label className="block text-sm font-medium text-white">Email</label>
-                        <div className="mt-1">
-                          <input
-                            type="email"
-                            value={credentials.email}
-                            onChange={(e) =>
-                              setCredentials({ ...credentials, email: e.target.value })
-                            }
-                            className="input-animated w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50"
-                            placeholder={userTypes.find((t) => t.id === activeTab)?.placeholder}
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-white">Password</label>
-                        <div className="mt-1 relative">
-                          <input
-                            type={showPassword ? "text" : "password"}
-                            value={credentials.password}
-                            onChange={(e) =>
-                              setCredentials({ ...credentials, password: e.target.value })
-                            }
-                            className="input-animated w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 pr-10"
-                            placeholder="Enter your password"
-                            required
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/50 hover:text-white"
-                          >
-                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                          </button>
-                        </div>
-                        
-                        <div className="mt-2">
-                          <div className="h-1 w-full bg-white/20 rounded-full overflow-hidden">
-                            <motion.div
-                              className={`h-full ${passwordStrength.color}`}
-                              initial={{ width: 0 }}
-                              animate={{ width: `${passwordStrength.score}%` }}
-                              transition={{ duration: 0.5 }}
-                            />
-                          </div>
-                          <p className="text-sm mt-1 text-white/70">
-                            Password Strength: {passwordStrength.label}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <input
-                            id="remember"
-                            type="checkbox"
-                            checked={credentials.remember}
-                            onChange={(e) =>
-                              setCredentials({ ...credentials, remember: e.target.checked })
-                            }
-                            className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-white/20 rounded bg-white/10"
-                          />
-                          <label htmlFor="remember" className="ml-2 block text-sm text-white">
-                            Remember me
-                          </label>
-                        </div>
-
-                        <div className="text-sm">
-                          <a href="#" className="font-medium text-purple-300 hover:text-purple-200">
-                            Forgot password?
-                          </a>
-                        </div>
-                      </div>
-
-                      <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isLoading ? (
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                            className="w-5 h-5 border-2 border-white rounded-full border-t-transparent"
-                          />
-                        ) : (
-                          "Sign In"
-                        )}
-                      </button>
-                    </form>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-6"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <CheckCircle className="h-8 w-8 text-green-400" />
-                      <h2 className="text-2xl font-semibold text-white">
-                        Welcome back, {credentials.email}
-                      </h2>
-                    </div>
-
-                    <div className="bg-white/10 rounded-lg p-6">
-                      <h3 className="text-lg font-medium text-white mb-4">Recent Transactions</h3>
-                      <div className="space-y-4">
-                        {transactions.map((transaction) => (
-                          <motion.div
-                            key={transaction.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="flex justify-between items-center p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                          >
-                            <div>
-                              <p className="text-white font-medium">{transaction.description}</p>
-                              <p className="text-sm text-white/70">{formatDate(transaction.date)}</p>
-                            </div>
-                            <p className={`text-lg font-semibold ${
-                              transaction.amount > 0 ? "text-green-400" : "text-red-400"
-                            }`}>
-                              {transaction.amount > 0 ? "+" : ""}${transaction.amount.toFixed(2)}
-                            </p>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    >
-                      Sign Out
-                    </button>
                   </motion.div>
                 )}
-              </AnimatePresence>
-            </div>
-          </div>
+
+                {/* User Type Selection */}
+                <div className="grid grid-cols-2 gap-4 sm:flex sm:space-x-4 justify-center">
+                  {userTypes.map((type) => {
+                    const Icon = type.icon;
+                    return (
+                      <motion.div
+                        key={type.id}
+                        onClick={() => setActiveTab(type.id)}
+                        className={`p-3 sm:p-4 flex flex-col items-center rounded-xl cursor-pointer ${
+                          activeTab === type.id
+                            ? "bg-white/20 border border-white/50"
+                            : "hover:bg-white/10"
+                        }`}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+                        <span className="mt-1 sm:mt-2 text-xs sm:text-sm text-white">{type.label}</span>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                {/* Login Form */}
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                  {/* Email Input */}
+                  <div>
+                    <label className="block text-sm font-medium text-white">Email</label>
+                    <div className="mt-1">
+                      <input
+                        type="email"
+                        value={credentials.email}
+                        onChange={(e) =>
+                          setCredentials({ ...credentials, email: e.target.value })
+                        }
+                        className="input-animated w-full px-4 py-2 text-sm sm:text-base bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50"
+                        placeholder={userTypes.find((t) => t.id === activeTab)?.placeholder}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Password Input */}
+                  <div>
+                    <label className="block text-sm font-medium text-white">Password</label>
+                    <div className="mt-1 relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        value={credentials.password}
+                        onChange={(e) =>
+                          setCredentials({ ...credentials, password: e.target.value })
+                        }
+                        className="input-animated w-full px-4 py-2 text-sm sm:text-base bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 pr-10"
+                        placeholder="Enter your password"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/50 hover:text-white"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Eye className="h-4 w-4 sm:h-5 sm:w-5" />}
+                      </button>
+                    </div>
+                    
+                    {/* Password Strength */}
+                    <div className="mt-2">
+                      <div className="h-1 w-full bg-white/20 rounded-full overflow-hidden">
+                        <motion.div
+                          className={`h-full ${passwordStrength.color}`}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${passwordStrength.score}%` }}
+                          transition={{ duration: 0.5 }}
+                        />
+                      </div>
+                      <p className="text-xs sm:text-sm mt-1 text-white/70">
+                        Password Strength: {passwordStrength.label}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Remember Me & Forgot Password */}
+                  <div className="flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0">
+                    <div className="flex items-center">
+                      <input
+                        id="remember"
+                        type="checkbox"
+                        checked={credentials.remember}
+                        onChange={(e) =>
+                          setCredentials({ ...credentials, remember: e.target.checked })
+                        }
+                        className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-white/20 rounded bg-white/10"
+                      />
+                      <label htmlFor="remember" className="ml-2 block text-xs sm:text-sm text-white">
+                        Remember me
+                      </label>
+                    </div>
+
+                    <div className="text-xs sm:text-sm">
+                      <a href="#" className="font-medium text-purple-300 hover:text-purple-200">
+                        Forgot password?
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm sm:text-base font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? (
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white rounded-full border-t-transparent"
+                      />
+                    ) : (
+                      "Sign In"
+                    )}
+                  </button>
+                </form>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-4 sm:space-y-6"
+              >
+                <div className="bg-white/10 rounded-lg p-4 sm:p-6">
+                  <h3 className="text-base sm:text-lg font-medium text-white mb-3 sm:mb-4">Recent Transactions</h3>
+                  <div className="space-y-3 sm:space-y-4">
+                    {transactions.map((transaction) => (
+                      <motion.div
+                        key={transaction.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex justify-between items-center p-3 sm:p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                      >
+                        <div className="truncate pr-2">
+                          <p className="text-sm sm:text-base text-white font-medium truncate">{transaction.description}</p>
+                          <p className="text-xs sm:text-sm text-white/70">{formatDate(transaction.date)}</p>
+                        </div>
+                        <p className={`text-sm sm:text-base font-semibold ${
+                          transaction.amount > 0 ? "text-green-400" : "text-red-400"
+                        }`}>
+                          {transaction.amount > 0 ? "+" : ""}${transaction.amount.toFixed(2)}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm sm:text-base font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Sign Out
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
+  </div>
+</div>
   );
 };
 
