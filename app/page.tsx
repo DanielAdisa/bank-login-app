@@ -11,6 +11,7 @@ interface Transaction {
   date: string;
   amount: number;
   description: string;
+  narration: string;
 }
 
 interface SessionData {
@@ -95,9 +96,10 @@ const LoginPage = () => {
 
       // Simulated transaction data
       const transactionData: Transaction[] = [
-        { id: 1, date: "2025-02-01", amount: 100, description: "Deposit" },
-        { id: 2, date: "2025-02-05", amount: -50, description: "Withdrawal" },
-        { id: 3, date: "2025-02-10", amount: 200, description: "Deposit" },
+        { id: 1, date: "2025-02-01", amount: 100, description: "Deposit" ,narration: "Mr Banks" },
+        { id: 2, date: "2025-02-05", amount: -50, description: "Withdrawal" ,narration: "Rice & Beans" },
+        { id: 3, date: "2025-02-10", amount: 200, description: "Deposit" ,narration: "Mrs. Opoku" },
+        { id: 2, date: "2025-02-05", amount: -45.60, description: "Withdrawal" ,narration: "Transport" },
       ];
 
       // Save session data with expiration
@@ -194,10 +196,10 @@ const LoginPage = () => {
 }, []);
 
   return (
-    <div className="min-h-screen gradient-background rounded-2xl px-4 py-6 flex flex-col justify-center sm:py-12">
+    <div className="min-h-screen w-full gradient-background rounded-2xl px-4 py-6 flex flex-col justify-center sm:py-12">
   <div className="relative py-3 mx-auto w-full max-w-xs sm:max-w-xl">
-    <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-fuchsia-500 shadow-lg transform -skew-y-4 sm:-skew-y-0 sm:-rotate-6 sm:rounded-3xl opacity-75 animate-float overflow-hidden"></div>
-    <div className="relative px-4 py-8 glass-morphism shadow-xl sm:rounded-3xl sm:p-10 md:p-20">
+    <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-fuchsia-500 shadow-lg transform rounded-xl w-full -skew-y-4 sm:-skew-y-0 sm:-rotate-6 sm:rounded-3xl opacity-75 animate-float overflow-hidden"></div>
+    <div className="relative px-4 py-8 glass-morphism w-full rounded-xl shadow-xl sm:rounded-3xl sm:p-10 md:p-20">
       <div className="mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -372,22 +374,26 @@ const LoginPage = () => {
                   <h3 className="text-base sm:text-lg font-medium text-white mb-3 sm:mb-4">Recent Transactions</h3>
                   <div className="space-y-3 sm:space-y-4">
                     {transactions.map((transaction) => (
+                      <div className="bg-white/5 hover:bg-white/10 transition-colors">
                       <motion.div
                         key={transaction.id}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="flex justify-between items-center p-3 sm:p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                        className="flex justify-between items-center p-3 sm:p-4 rounded-lg "
                       >
                         <div className="truncate pr-2">
                           <p className="text-sm sm:text-base text-white font-medium truncate">{transaction.description}</p>
                           <p className="text-xs sm:text-sm text-white/70">{formatDate(transaction.date)}</p>
                         </div>
+                        
                         <p className={`text-sm sm:text-base font-semibold ${
                           transaction.amount > 0 ? "text-green-400" : "text-red-400"
                         }`}>
                           {transaction.amount > 0 ? "+" : ""}${transaction.amount.toFixed(2)}
                         </p>
                       </motion.div>
+                        <p className=" p-4 text-center">{transaction.narration}</p>
+                      </div>
                     ))}
                   </div>
                 </div>
