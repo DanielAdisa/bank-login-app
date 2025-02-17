@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, Eye, EyeOff, User, Building, Shield, Users, CheckCircle, AlertTriangle, UserCircle } from "lucide-react";
+import { Lock, Eye, EyeOff, User, Building, Shield, Users, CheckCircle, AlertTriangle, UserCircle, BanknoteIcon } from "lucide-react";
 import Swal from "sweetalert2";
 import { validatePassword, calculatePasswordStrength, hashPassword, RateLimiter } from "../utils/security";
 
@@ -197,7 +197,7 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen w-full gradient-background rounded-2xl px-4 py-6 flex flex-col justify-center sm:py-12">
-  <div className="relative py-3 mx-auto w-full max-w-xs sm:max-w-xl">
+  <div className="relative py-3 mx-auto w-full max-w-xl sm:max-w-xl">
     <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-fuchsia-500 shadow-lg transform rounded-xl w-full -skew-y-4 sm:-skew-y-0 sm:-rotate-6 sm:rounded-3xl opacity-75 animate-float overflow-hidden"></div>
     <div className="relative px-4 py-8 glass-morphism w-full rounded-xl shadow-xl sm:rounded-3xl sm:p-10 md:p-20">
       <div className="mx-auto">
@@ -205,8 +205,10 @@ const LoginPage = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className=" flex justify-center items-center mb-6 sm:mb-8 gap-4"
         >
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-8 text-center">Banking Portal</h1>
+          <BanknoteIcon className="text-[500px]" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-white  text-center">Banking Portal</h1>
         </motion.div>
 
         <div className="space-y-6 sm:space-y-8">
