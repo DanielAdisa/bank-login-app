@@ -196,32 +196,37 @@ const LoginPage = () => {
 }, []);
 
   return (
-    <div className="min-h-screen w-full gradient-background rounded-2xl px-4 py-6 flex flex-col justify-center sm:py-12">
+    <div className="min-h-screen w-full gradient-background rounded-2xl px-4 py-6 flex flex-col justify-center space-y-6 sm:py-12">
   <div className="relative py-3 mx-auto w-full max-w-xl sm:max-w-xl">
-    <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-fuchsia-500 shadow-lg transform rounded-xl w-full -skew-y-4 sm:-skew-y-0 sm:-rotate-6 sm:rounded-3xl opacity-75 animate-float overflow-hidden"></div>
+    <div className="absolute inset-0 bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-600 shadow-lg transform rounded-xl w-full -skew-y-4 sm:-skew-y-0 sm:-rotate-6 sm:rounded-3xl opacity-75 animate-float overflow-hidden"></div>
     <div className="relative px-4 py-8 glass-morphism w-full rounded-xl shadow-xl sm:rounded-3xl sm:p-10 md:p-20">
       <div className="mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className=" flex justify-center items-center mb-6 sm:mb-8 gap-4"
+          className="flex flex-col justify-center items-center mb-6 sm:mb-8 gap-2"
         >
-          <BanknoteIcon className="text-[500px]" />
-          <h1 className="text-2xl sm:text-3xl font-bold text-white  text-center">Banking Portal</h1>
+          <BanknoteIcon className="h-16 w-16 text-white" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-white text-center">
+            EmpowerHer Savings
+          </h1>
+          <p className="text-sm sm:text-base text-white/80 text-center">
+            Empowering women through smart savings and financial independence
+          </p>
         </motion.div>
-
+        
         <div className="space-y-6 sm:space-y-8">
           <AnimatePresence mode="wait">
             {!isLoggedIn ? (
               <motion.div
+                key="login-form"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
                 className="space-y-4 sm:space-y-6"
               >
-                {/* Error Message */}
                 {error && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
@@ -235,8 +240,8 @@ const LoginPage = () => {
                   </motion.div>
                 )}
 
-                {/* User Type Selection */}
-                <div className="grid grid-cols-2 gap-4 sm:flex sm:space-x-4 justify-center">
+                {/* User Type Selection (optional) */}
+                <div className="grid grid-cols-4 gap-4 sm:flex sm:space-x-4 justify-center">
                   {userTypes.map((type) => {
                     const Icon = type.icon;
                     return (
@@ -300,7 +305,7 @@ const LoginPage = () => {
                       </button>
                     </div>
                     
-                    {/* Password Strength */}
+                    {/* Password Strength Indicator */}
                     <div className="mt-2">
                       <div className="h-1 w-full bg-white/20 rounded-full overflow-hidden">
                         <motion.div
@@ -317,7 +322,7 @@ const LoginPage = () => {
                   </div>
 
                   {/* Remember Me & Forgot Password */}
-                  <div className="flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0">
+                  <div className="flex sm:flex-row items-center justify-between space-y-3 sm:space-y-0">
                     <div className="flex items-center">
                       <input
                         id="remember"
@@ -332,7 +337,6 @@ const LoginPage = () => {
                         Remember me
                       </label>
                     </div>
-
                     <div className="text-xs sm:text-sm">
                       <a href="#" className="font-medium text-purple-300 hover:text-purple-200">
                         Forgot password?
@@ -353,13 +357,14 @@ const LoginPage = () => {
                         className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white rounded-full border-t-transparent"
                       />
                     ) : (
-                      "Sign In"
+                      "Access Account"
                     )}
                   </button>
                 </form>
               </motion.div>
             ) : (
               <motion.div
+                key="dashboard"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
@@ -367,40 +372,45 @@ const LoginPage = () => {
                 className="space-y-4 sm:space-y-6"
               >
                 <div className="flex items-center space-x-4">
-                      <CheckCircle className="h-8 w-8 text-green-400" />
-                      <h2 className="text-xl p-2 font-semibold text-white">
-                        Welcome back, {credentials.email}
-                      </h2>
-                    </div>
+                  <CheckCircle className="h-8 w-8 text-green-400" />
+                  <h2 className="text-xl p-2 font-semibold text-white">
+                    Welcome back, {credentials.email}
+                  </h2>
+                </div>
                 <div className="bg-white/10 rounded-lg p-4 sm:p-6">
-                  <h3 className="text-base sm:text-lg font-medium text-white mb-3 sm:mb-4">Recent Transactions</h3>
+                  <h3 className="text-base sm:text-lg font-medium text-white mb-3 sm:mb-4">
+                    Recent Savings Transactions
+                  </h3>
                   <div className="space-y-2 sm:space-y-2">
                     {transactions.map((transaction) => (
-                      <div className="bg-white/5 hover:bg-white/10 transition-colors">
-                      <motion.div
-                        key={transaction.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex justify-between items-center p-2 sm:p-4 rounded-lg "
-                      >
-                        <div className="truncate pr-2">
-                          <p className="text-sm sm:text-base text-white font-medium truncate">{transaction.description}</p>
-                          <p className="text-xs sm:text-sm text-white/70">{formatDate(transaction.date)}</p>
-                        </div>
-                        
-                        <p className={`text-sm sm:text-base font-semibold ${
-                          transaction.amount > 0 ? "text-green-400" : "text-red-400"
-                        }`}>
-                          {transaction.amount > 0 ? "+" : ""}${transaction.amount.toFixed(2)}
-                        </p>
-                      </motion.div>
-                        <p className=" p-4 text-center">{transaction.narration}</p>
+                      <div key={transaction.id} className="bg-white/5 hover:bg-white/10 transition-colors">
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="flex justify-between items-center p-2 sm:p-4 rounded-lg"
+                        >
+                          <div className="truncate pr-2">
+                            <p className="text-sm sm:text-base text-white font-medium truncate">
+                              {transaction.description}
+                            </p>
+                            <p className="text-xs sm:text-sm text-white/70">
+                              {formatDate(transaction.date)}
+                            </p>
+                          </div>
+                          <p className={`text-sm sm:text-base font-semibold ${
+                              transaction.amount > 0 ? "text-green-400" : "text-red-400"
+                            }`}>
+                            {transaction.amount > 0 ? "+" : ""}${transaction.amount.toFixed(2)}
+                          </p>
+                        </motion.div>
+                        {transaction.narration && (
+                          <p className="p-4 text-center text-white/80">{transaction.narration}</p>
+                        )}
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Logout Button */}
                 <button
                   onClick={handleLogout}
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm sm:text-base font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -415,6 +425,7 @@ const LoginPage = () => {
     </div>
   </div>
 </div>
+
   );
 };
 
